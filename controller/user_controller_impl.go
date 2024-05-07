@@ -13,13 +13,13 @@ type UserControllerImpl struct {
 	userService service.UserService
 }
 
-func NewUserController(service service.UserService) *UserControllerImpl{
+func NewUserController(service service.UserService) *UserControllerImpl {
 	return &UserControllerImpl{
 		userService: service,
 	}
 }
 
-func (controller *UserControllerImpl)SaveUser(c echo.Context) error  {
+func (controller *UserControllerImpl) SaveUser(c echo.Context) error {
 	user := new(web.UserServiceRequest)
 
 	if err := c.Bind(user); err != nil {

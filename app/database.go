@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func DBConnection() *gorm.DB{
+func DBConnection() *gorm.DB {
 
 	dsn := "user=postgres password=postgres dbname=db_gorm port=5432 sslmode=disable TimeZone=Asia/Jakarta"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -17,5 +17,5 @@ func DBConnection() *gorm.DB{
 	}
 
 	return db
-	
+
 }

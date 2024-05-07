@@ -6,7 +6,6 @@ import (
 	"belajar-rest-gorm/model/web"
 	"belajar-rest-gorm/repository"
 
-	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -14,20 +13,15 @@ type ResponseToJson map[string]interface{}
 
 type UserServiceImpl struct {
 	repository repository.UserRepository
-	validate   *validator.Validate
 }
 
-func NewUserService(repository repository.UserRepository, validate *validator.Validate) *UserServiceImpl {
+func NewUserService(repository repository.UserRepository) *UserServiceImpl {
 	return &UserServiceImpl{
 		repository: repository,
-		validate:   validate,
 	}
 }
 
 func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest) (map[string]interface{}, error) {
-	if err := service.validate.Struct(request); err != nil {
-		return nil, err
-	}
 
 	passHash, errHash := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.MinCost)
 
