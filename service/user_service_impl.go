@@ -22,7 +22,7 @@ func NewUserService(repository repository.UserRepository) *UserServiceImpl {
 	}
 }
 
-func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest)(map[string]interface{},error){
+func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest) (map[string]interface{}, error) {
 
 	passHash, errHash := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.MinCost)
 
@@ -54,4 +54,14 @@ func (service *UserServiceImpl) GetUser(userId int) (entity.UserEntity, error) {
 	}
 
 	return entity.ToUserEntity(getUser.UserID, getUser.Name, getUser.Email), nil
+}
+
+func (service *UserServiceImpl) GetUsers() ([]entity.UserEntity, error) {
+	getUsers, errGetUsers := service.repository.GetUsers()
+
+	if errGetUsers != nil {
+		return []entity.UserEntity{}, errGetUsers
+	}
+
+	return entity.ToUserListEntity(getUsers), nil
 }

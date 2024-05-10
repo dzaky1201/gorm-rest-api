@@ -1,5 +1,7 @@
 package entity
 
+import "belajar-rest-gorm/model/domain"
+
 type UserEntity struct {
 	UserID int    `json:"user_id"`
 	Name   string `json:"name"`
@@ -12,4 +14,14 @@ func ToUserEntity(user_id int, name string, email string) UserEntity {
 		Name:   name,
 		Email:  email,
 	}
+}
+
+func ToUserListEntity(users []domain.User) []UserEntity {
+	usersData := []UserEntity{}
+
+	for _, user := range users {
+		usersData = append(usersData, ToUserEntity(user.UserID, user.Name, user.Email))
+	}
+
+	return usersData
 }

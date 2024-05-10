@@ -51,3 +51,14 @@ func (controller *UserControllerImpl) GetUser(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "success", getUser))
 }
+
+func (controller *UserControllerImpl) GetUsers(c echo.Context) error {
+
+	getUsers, errGetUsers := controller.userService.GetUsers()
+
+	if errGetUsers != nil {
+		return c.JSON(http.StatusNotFound, model.ResponseToClient(http.StatusInternalServerError, errGetUsers.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "success", getUsers))
+}

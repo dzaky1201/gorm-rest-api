@@ -8,4 +8,5 @@ import (
 type UserService interface {
 	SaveUser(request web.UserServiceRequest) (map[string]interface{}, error)
 	GetUser(userId int) (entity.UserEntity, error)
+	GetUsers() ([]entity.UserEntity, error)
 }
