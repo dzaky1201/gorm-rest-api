@@ -3,6 +3,7 @@ package service
 import (
 	"belajar-rest-gorm/helper"
 	"belajar-rest-gorm/model/domain"
+	"belajar-rest-gorm/model/entity"
 	"belajar-rest-gorm/model/web"
 	"belajar-rest-gorm/repository"
 
@@ -43,4 +44,54 @@ func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest)(map[str
 
 	return helper.ResponseToJson{"name": saveUser.Name, "email": saveUser.Email}, nil
 
+}
+
+func (service *UserServiceImpl)GetUser(userId int)(entity.UserEntity, error)  {
+	getUser, errGetUser := service.repository.GetUser(userId)
+
+	if errGetUser != nil {
+		return entity.UserEntity{}, errGetUser
+	}
+
+	return entity.ToUserEntity(getUser.UserID, getUser.Name, getUser.Email), nil
+}
+
+func (service *UserServiceImpl)GetUseList()([]entity.UserEntity, error)  {
+	getUserList, errGetUserList := service.repository.GetUsers()
+
+	if errGetUserList != nil {
+		return []entity.UserEntity{}, errGetUserList
+	}
+
+	return entity.ToUserListEntity(getUserList), nil
+}
+
+func (service *UserServiceImpl)UpdateUser(request web.UserUpdateServiceRequest, pathId int) (map[string]interface{}, error)  {
+	getUserById, err := service.repository.GetUser(pathId)
+	if err != nil {
+		return nil, err
+	}
+
+	if request.Name == "" {
+		request.Name = getUserById.Name
+	}
+
+	if request.Email == ""{
+		request.Email = getUserById.Email
+	}
+
+	userRequest := domain.User{
+		UserID: pathId,
+		Name: request.Name,
+		Email: request.Email,
+		Password: getUserById.Password,
+	}
+
+	updateUser, errUpdate := service.repository.UpdateUser(userRequest)
+
+	if errUpdate != nil {
+		return nil, errUpdate
+	}
+
+	return helper.ResponseToJson{"name": updateUser.Name, "email": updateUser.Email}, nil
 }
