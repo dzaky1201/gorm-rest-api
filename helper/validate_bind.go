@@ -17,16 +17,16 @@ func BindAndValidate(err error, c echo.Context) {
 
 	if castedObject, ok := err.(validator.ValidationErrors); ok {
 		for _, err := range castedObject {
-			switch err.Tag() {
+			switch err.Tag(){
 			case "required":
-				report.Message = fmt.Sprintf("%s is required", err.Field())
+				report.Message = fmt.Sprintf("%s field ini wajib diisi", err.Field())
+				report.Code = http.StatusBadRequest
 			case "email":
-				report.Message = fmt.Sprintf("%s is not valid email", err.Field())
+				report.Message = fmt.Sprintf("%s ini bukan email valid", err.Field())
+				report.Code = http.StatusBadRequest
 			}
-
 		}
 	}
-
-	c.Logger().Error(report)
+	c.Logger().Error(report.Message)
 	c.JSON(report.Code, model.ResponseToClient(report.Code, report.Message.(string), nil))
 }
