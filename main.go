@@ -6,7 +6,6 @@ import (
 	"belajar-rest-gorm/helper"
 	"belajar-rest-gorm/repository"
 	"belajar-rest-gorm/service"
-	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -16,12 +15,11 @@ type CustomValidator struct {
 	validator *validator.Validate
 }
 
-func (cv *CustomValidator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	return nil
+func(cv *CustomValidator) Validate(i interface{}) error {
+	return cv.validator.Struct(i)
 }
+
+
 func main() {
 	db := app.DBConnection()
 	userRepo := repository.NewUserRepository(db)
