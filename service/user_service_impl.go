@@ -21,7 +21,7 @@ func NewUserService(repository repository.UserRepository) *UserServiceImpl {
 	}
 }
 
-func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest) (map[string]interface{}, error) {
+func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest)(map[string]interface{},error){
 
 	passHash, errHash := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.MinCost)
 

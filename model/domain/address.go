@@ -1,8 +1,6 @@
 package domain
 
-import (
-	"time"
-)
+import "time"
 
 type Address struct {
 	AddressID  int    `gorm:"column:address_id;primaryKey;autoIncrement"`
