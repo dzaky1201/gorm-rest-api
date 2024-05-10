@@ -3,6 +3,7 @@ package service
 import (
 	"belajar-rest-gorm/helper"
 	"belajar-rest-gorm/model/domain"
+	"belajar-rest-gorm/model/entity"
 	"belajar-rest-gorm/model/web"
 	"belajar-rest-gorm/repository"
 
@@ -43,4 +44,14 @@ func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest) (map[st
 
 	return helper.ResponseToJson{"name": saveUser.Name, "email": saveUser.Email}, nil
 
+}
+
+func (service *UserServiceImpl) GetUser(userId int) (entity.UserEntity, error) {
+	getUser, errGetUser := service.repository.GetUser(userId)
+
+	if errGetUser != nil {
+		return entity.UserEntity{}, errGetUser
+	}
+
+	return entity.ToUserEntity(getUser.UserID, getUser.Name, getUser.Email), nil
 }

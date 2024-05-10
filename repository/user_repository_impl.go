@@ -2,6 +2,7 @@ package repository
 
 import (
 	"belajar-rest-gorm/model/domain"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -28,10 +29,10 @@ func (repo *UserRepositoryImpl) SaveUser(user domain.User) (domain.User, error) 
 func (repo *UserRepositoryImpl) GetUser(Id int) (domain.User, error) {
 	var userData domain.User
 
-	err := repo.db.First(&userData, "id = ?", Id).Error
+	err := repo.db.First(&userData, "user_id = ?", Id).Error
 
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, errors.New("user tidak ditemukan")
 	}
 
 	return userData, nil

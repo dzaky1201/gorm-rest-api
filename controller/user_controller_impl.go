@@ -5,6 +5,7 @@ import (
 	"belajar-rest-gorm/model/web"
 	"belajar-rest-gorm/service"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -37,4 +38,16 @@ func (controller *UserControllerImpl) SaveUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "berhasil membuat user", saveUser))
+}
+
+func (controller *UserControllerImpl) GetUser(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	getUser, errGetUser := controller.userService.GetUser(id)
+
+	if errGetUser != nil {
+		return c.JSON(http.StatusNotFound, model.ResponseToClient(http.StatusNotFound, errGetUser.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "success", getUser))
 }

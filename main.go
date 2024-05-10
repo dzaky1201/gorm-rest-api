@@ -32,5 +32,6 @@ func main() {
 	r.Validator = &CustomValidator{validator: validator.New()}
 	r.HTTPErrorHandler = helper.BindAndValidate
 	r.POST("/register", userController.SaveUser)
+	r.GET("/user/:id", userController.GetUser)
 	r.Logger.Fatal(r.Start(":8080"))
 }
