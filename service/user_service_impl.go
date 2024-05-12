@@ -22,7 +22,7 @@ func NewUserService(repository repository.UserRepository) *UserServiceImpl {
 	}
 }
 
-func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest) (map[string]interface{}, error) {
+func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest)(map[string]interface{},error){
 
 	passHash, errHash := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.MinCost)
 
@@ -46,7 +46,7 @@ func (service *UserServiceImpl) SaveUser(request web.UserServiceRequest) (map[st
 
 }
 
-func (service *UserServiceImpl) GetUser(userId int) (entity.UserEntity, error) {
+func (service *UserServiceImpl)GetUser(userId int)(entity.UserEntity, error)  {
 	getUser, errGetUser := service.repository.GetUser(userId)
 
 	if errGetUser != nil {
@@ -56,12 +56,42 @@ func (service *UserServiceImpl) GetUser(userId int) (entity.UserEntity, error) {
 	return entity.ToUserEntity(getUser.UserID, getUser.Name, getUser.Email), nil
 }
 
-func (service *UserServiceImpl) GetUsers() ([]entity.UserEntity, error) {
-	getUsers, errGetUsers := service.repository.GetUsers()
+func (service *UserServiceImpl)GetUseList()([]entity.UserEntity, error)  {
+	getUserList, errGetUserList := service.repository.GetUsers()
 
-	if errGetUsers != nil {
-		return []entity.UserEntity{}, errGetUsers
+	if errGetUserList != nil {
+		return []entity.UserEntity{}, errGetUserList
 	}
 
-	return entity.ToUserListEntity(getUsers), nil
+	return entity.ToUserListEntity(getUserList), nil
+}
+
+func (service *UserServiceImpl)UpdateUser(request web.UserUpdateServiceRequest, pathId int) (map[string]interface{}, error)  {
+	getUserById, err := service.repository.GetUser(pathId)
+	if err != nil {
+		return nil, err
+	}
+
+	if request.Name == "" {
+		request.Name = getUserById.Name
+	}
+
+	if request.Email == ""{
+		request.Email = getUserById.Email
+	}
+
+	userRequest := domain.User{
+		UserID: pathId,
+		Name: request.Name,
+		Email: request.Email,
+		Password: getUserById.Password,
+	}
+
+	updateUser, errUpdate := service.repository.UpdateUser(userRequest)
+
+	if errUpdate != nil {
+		return nil, errUpdate
+	}
+
+	return helper.ResponseToJson{"name": updateUser.Name, "email": updateUser.Email}, nil
 }

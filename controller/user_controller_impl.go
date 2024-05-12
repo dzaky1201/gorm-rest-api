@@ -40,7 +40,7 @@ func (controller *UserControllerImpl) SaveUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "berhasil membuat user", saveUser))
 }
 
-func (controller *UserControllerImpl) GetUser(c echo.Context) error {
+func (controller *UserControllerImpl)GetUser(c echo.Context) error  {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	getUser, errGetUser := controller.userService.GetUser(id)
@@ -52,13 +52,30 @@ func (controller *UserControllerImpl) GetUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "success", getUser))
 }
 
-func (controller *UserControllerImpl) GetUsers(c echo.Context) error {
-
-	getUsers, errGetUsers := controller.userService.GetUsers()
+func (controller *UserControllerImpl)GetUserList(c echo.Context) error  {
+	getUsers, errGetUsers := controller.userService.GetUseList()
 
 	if errGetUsers != nil {
-		return c.JSON(http.StatusNotFound, model.ResponseToClient(http.StatusInternalServerError, errGetUsers.Error(), nil))
+		return c.JSON(http.StatusInternalServerError, model.ResponseToClient(http.StatusInternalServerError, errGetUsers.Error(), nil))
 	}
 
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "success", getUsers))
+}
+
+func (controller *UserControllerImpl)Updateuser(c echo.Context) error  {
+
+	user := new(web.UserUpdateServiceRequest)
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if err := c.Bind(user); err != nil {
+		return c.JSON(http.StatusBadRequest, model.ResponseToClient(http.StatusBadRequest, err.Error(), nil))
+	}
+
+	userUpdate, errUserUpdate := controller.userService.UpdateUser(*user, id)
+
+	if errUserUpdate != nil {
+		return c.JSON(http.StatusBadRequest, model.ResponseToClient(http.StatusBadRequest, errUserUpdate.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "data berhasil diupdate", userUpdate))
 }

@@ -49,3 +49,13 @@ func (repo *UserRepositoryImpl) GetUsers() ([]domain.User, error) {
 
 	return users, nil
 }
+
+func (repo *UserRepositoryImpl)UpdateUser(user domain.User)(domain.User, error){
+	err := repo.db.Model(domain.User{}).Where("user_id = ?", user.UserID).Updates(user).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}

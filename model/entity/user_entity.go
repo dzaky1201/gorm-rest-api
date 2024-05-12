@@ -16,12 +16,12 @@ func ToUserEntity(user_id int, name string, email string) UserEntity {
 	}
 }
 
-func ToUserListEntity(users []domain.User) []UserEntity {
-	usersData := []UserEntity{}
+func ToUserListEntity(users []domain.User)[]UserEntity {
+	userData := []UserEntity{}
 
 	for _, user := range users {
-		usersData = append(usersData, ToUserEntity(user.UserID, user.Name, user.Email))
+		userData = append(userData, ToUserEntity(user.UserID, user.Name, user.Email))
 	}
 
-	return usersData
+	return userData
 }

@@ -15,9 +15,10 @@ type CustomValidator struct {
 	validator *validator.Validate
 }
 
-func (cv *CustomValidator) Validate(i interface{}) error {
+func(cv *CustomValidator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
 }
+
 
 func main() {
 	db := app.DBConnection()
@@ -30,6 +31,7 @@ func main() {
 	r.HTTPErrorHandler = helper.BindAndValidate
 	r.POST("/register", userController.SaveUser)
 	r.GET("/user/:id", userController.GetUser)
-	r.GET("/users", userController.GetUsers)
+	r.GET("/users", userController.GetUserList)
+	r.PUT("/user/:id", userController.Updateuser)
 	r.Logger.Fatal(r.Start(":8080"))
 }
