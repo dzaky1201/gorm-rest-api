@@ -79,3 +79,18 @@ func (controller *UserControllerImpl)Updateuser(c echo.Context) error  {
 
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "data berhasil diupdate", userUpdate))
 }
+
+func (controller *UserControllerImpl)LoginUser(c echo.Context) error{
+	user := new(web.UserLoginRequest)
+
+	if err := c.Bind(&user); err != nil {
+		return c.JSON(http.StatusBadRequest, model.ResponseToClient(http.StatusBadRequest, err.Error(), nil))
+	}
+
+	userLogin, errLogin := controller.userService.LoginUser(user.Email, user.Password)
+	if errLogin != nil {
+		return c.JSON(http.StatusBadRequest, model.ResponseToClient(http.StatusBadRequest, errLogin.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "Login berhasil", userLogin))
+}

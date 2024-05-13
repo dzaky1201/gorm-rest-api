@@ -6,7 +6,11 @@ import (
 	"belajar-rest-gorm/model/entity"
 	"belajar-rest-gorm/model/web"
 	"belajar-rest-gorm/repository"
+	"errors"
+	"strconv"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -14,11 +18,13 @@ type ResponseToJson map[string]interface{}
 
 type UserServiceImpl struct {
 	repository repository.UserRepository
+	tokenUseCase helper.TokenUseCase
 }
 
-func NewUserService(repository repository.UserRepository) *UserServiceImpl {
+func NewUserService(repository repository.UserRepository, token helper.TokenUseCase) *UserServiceImpl {
 	return &UserServiceImpl{
 		repository: repository,
+		tokenUseCase: token,
 	}
 }
 
@@ -94,4 +100,39 @@ func (service *UserServiceImpl)UpdateUser(request web.UserUpdateServiceRequest, 
 	}
 
 	return helper.ResponseToJson{"name": updateUser.Name, "email": updateUser.Email}, nil
+}
+
+func (service *UserServiceImpl)LoginUser(email string, password string) (map[string]interface{}, error){
+	user, err := service.repository.FindUserByEmail(email)
+
+	if err != nil {
+		return nil, errors.New("Email tidak terdaftar !")
+	}
+
+	errPass := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if  errPass != nil {
+		return nil, errors.New("Password salah !")
+	}
+
+	expiredTime := time.Now().Local().Add(5 * time.Minute)
+
+	claims := helper.JwtCustomClaims{
+		ID: strconv.Itoa(user.UserID),
+		Name: user.Name,
+		Email: user.Email,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer: "rest-gorm",
+			ExpiresAt: jwt.NewNumericDate(expiredTime),
+		},
+	}
+
+	token, errToken := service.tokenUseCase.GenerateAccessToken(claims)
+
+	if errToken != nil {
+		return nil, errors.New("ada kesalahan generate token")
+	}
+
+	return helper.ResponseToJson{"token": token, "expired": expiredTime}, nil
+
 }

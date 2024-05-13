@@ -59,3 +59,13 @@ func (repo *UserRepositoryImpl)UpdateUser(user domain.User)(domain.User, error){
 
 	return user, nil
 }
+
+func (repo *UserRepositoryImpl)FindUserByEmail(email string) (*domain.User, error){
+	user := new(domain.User)
+
+	if err := repo.db.Where("email = ?", email).Take(&user).Error; err != nil{
+		return user, err
+	}
+
+	return user, nil
+}
