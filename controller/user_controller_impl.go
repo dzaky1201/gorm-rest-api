@@ -40,7 +40,7 @@ func (controller *UserControllerImpl) SaveUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "berhasil membuat user", saveUser))
 }
 
-func (controller *UserControllerImpl)GetUser(c echo.Context) error  {
+func (controller *UserControllerImpl) GetUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	getUser, errGetUser := controller.userService.GetUser(id)
@@ -52,7 +52,7 @@ func (controller *UserControllerImpl)GetUser(c echo.Context) error  {
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "success", getUser))
 }
 
-func (controller *UserControllerImpl)GetUserList(c echo.Context) error  {
+func (controller *UserControllerImpl) GetUserList(c echo.Context) error {
 	getUsers, errGetUsers := controller.userService.GetUseList()
 
 	if errGetUsers != nil {
@@ -62,7 +62,7 @@ func (controller *UserControllerImpl)GetUserList(c echo.Context) error  {
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "success", getUsers))
 }
 
-func (controller *UserControllerImpl)Updateuser(c echo.Context) error  {
+func (controller *UserControllerImpl) Updateuser(c echo.Context) error {
 
 	user := new(web.UserUpdateServiceRequest)
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -80,17 +80,17 @@ func (controller *UserControllerImpl)Updateuser(c echo.Context) error  {
 	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "data berhasil diupdate", userUpdate))
 }
 
-func (controller *UserControllerImpl)LoginUser(c echo.Context) error{
+func (controller *UserControllerImpl) LoginUser(c echo.Context) error {
 	user := new(web.UserLoginRequest)
 
 	if err := c.Bind(&user); err != nil {
 		return c.JSON(http.StatusBadRequest, model.ResponseToClient(http.StatusBadRequest, err.Error(), nil))
 	}
 
-	userLogin, errLogin := controller.userService.LoginUser(user.Email, user.Password)
+	userRes, errLogin := controller.userService.LoginUser(user.Email, user.Password)
 	if errLogin != nil {
 		return c.JSON(http.StatusBadRequest, model.ResponseToClient(http.StatusBadRequest, errLogin.Error(), nil))
 	}
 
-	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "Login berhasil", userLogin))
+	return c.JSON(http.StatusOK, model.ResponseToClient(http.StatusOK, "login berhasil", userRes))
 }

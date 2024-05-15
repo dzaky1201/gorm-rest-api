@@ -7,7 +7,7 @@ import (
 )
 
 type TokenUseCase interface {
-	GenerateAccessToken(claims JwtCustomClaims)(string,error)
+	GenerateAccessToken(claims JwtCustomClaims) (string, error)
 }
 
 type tokenUseCase struct{}
@@ -23,7 +23,8 @@ func NewTokenUseCase() *tokenUseCase {
 	return &tokenUseCase{}
 }
 
-func (t *tokenUseCase)GenerateAccessToken(claims JwtCustomClaims)(string,error){
+func (t *tokenUseCase) GenerateAccessToken(claims JwtCustomClaims) (string, error) {
+
 	plainToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	encodedToken, err := plainToken.SignedString([]byte(os.Getenv("SECRET_KEY")))

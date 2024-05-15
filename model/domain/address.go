@@ -11,3 +11,7 @@ type Address struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
+
+func (addr Address)TableName() string  {
+	return "address"
+}

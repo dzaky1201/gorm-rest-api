@@ -3,6 +3,7 @@ package repository
 import (
 	"belajar-rest-gorm/model/domain"
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -29,7 +30,7 @@ func (repo *UserRepositoryImpl) SaveUser(user domain.User) (domain.User, error) 
 func (repo *UserRepositoryImpl) GetUser(Id int) (domain.User, error) {
 	var userData domain.User
 
-	err := repo.db.First(&userData, "user_id = ?", Id).Error
+	err := repo.db.Joins("Address").First(&userData, "user_id = ?", Id).Error
 
 	if err != nil {
 		return domain.User{}, errors.New("user tidak ditemukan")
@@ -41,12 +42,12 @@ func (repo *UserRepositoryImpl) GetUser(Id int) (domain.User, error) {
 func (repo *UserRepositoryImpl) GetUsers() ([]domain.User, error) {
 	var users []domain.User
 
-	err := repo.db.Find(&users).Error
+	err := repo.db.Joins("Address").Find(&users).Error
 
 	if err != nil {
 		return []domain.User{}, err
 	}
-
+	fmt.Println(users[1].Address == nil)
 	return users, nil
 }
 
@@ -62,10 +63,8 @@ func (repo *UserRepositoryImpl)UpdateUser(user domain.User)(domain.User, error){
 
 func (repo *UserRepositoryImpl)FindUserByEmail(email string) (*domain.User, error){
 	user := new(domain.User)
-
-	if err := repo.db.Where("email = ?", email).Take(&user).Error; err != nil{
+	if err := repo.db.Where("email = ?", email).Take(&user).Error; err != nil {
 		return user, err
 	}
-
 	return user, nil
 }
