@@ -14,8 +14,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type ResponseToJson map[string]interface{}
-
 type UserServiceImpl struct {
 	repository   repository.UserRepository
 	tokenUseCase helper.TokenUseCase

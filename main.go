@@ -3,10 +3,13 @@ package main
 import (
 	"belajar-rest-gorm/app"
 	"belajar-rest-gorm/controller"
+	addresscontroller "belajar-rest-gorm/controller/address_controller"
 	"belajar-rest-gorm/helper"
 	"belajar-rest-gorm/model"
 	"belajar-rest-gorm/repository"
+	"belajar-rest-gorm/repository/address"
 	"belajar-rest-gorm/service"
+	addressservice "belajar-rest-gorm/service/address_service"
 	"log"
 	"net/http"
 	"os"
@@ -37,6 +40,10 @@ func main() {
 	userService := service.NewUserService(userRepo, tokenUseCase)
 	userController := controller.NewUserController(userService)
 
+	addressRepo := address.NewAddressRepository(db)
+	addressService := addressservice.NewAddressService(addressRepo)
+	addressController := addresscontroller.NewAddressController(addressService)
+
 	r := echo.New()
 	r.Validator = &CustomValidator{validator: validator.New()}
 	r.HTTPErrorHandler = helper.BindAndValidate
@@ -45,6 +52,11 @@ func main() {
 	r.GET("/users", userController.GetUserList, JWTProtection())
 	r.PUT("/user/:id", userController.Updateuser, JWTProtection())
 	r.POST("/user/login", userController.LoginUser)
+
+	r.POST("/address/add", addressController.SaveAddress)
+	r.GET("/address/:id", addressController.GetAddress, JWTProtection())
+	r.GET("/addresses", addressController.GetAddressList, JWTProtection())
+	r.PUT("/address/:id", addressController.UpdateAddress, JWTProtection())
 	r.Logger.Fatal(r.Start(":8080"))
 }
 
