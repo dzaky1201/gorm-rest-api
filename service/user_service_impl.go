@@ -57,7 +57,7 @@ func (service *UserServiceImpl) GetUser(userId int) (entity.UserEntity, error) {
 		return entity.UserEntity{}, errGetUser
 	}
 
-	return entity.ToUserEntity(getUser.UserID, getUser.Name, getUser.Email), nil
+	return entity.ToUserEntity(getUser), nil
 }
 
 func (service *UserServiceImpl) GetUseList() ([]entity.UserEntity, error) {

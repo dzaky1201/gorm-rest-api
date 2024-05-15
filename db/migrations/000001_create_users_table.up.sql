@@ -15,6 +15,6 @@ CREATE TABLE addresses(
     user_id_fk INTEGER not NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_users FOREIGN KEY(user_id_fk) REFERENCES users(user_id),
+    CONSTRAINT fk_users FOREIGN KEY(user_id_fk) REFERENCES users(user_id) on delete,
     CONSTRAINT unique_user_id UNIQUE(user_id_fk)
 );
