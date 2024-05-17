@@ -71,15 +71,20 @@ func (service *AddressServiceImpl) UpdateAddress(request web.CreateAddressReques
 		request.PostalCode = getAddressrById.PostalCode
 	}
 
+	if request.Province == "" {
+		request.Province = getAddressrById.Province
+	}
+
 	if request.UserIdFK == 0 {
 		request.UserIdFK = getAddressrById.UserIDFK
 	}
 
 	addressRequest := domain.Address{
 		AddressID:  getAddressrById.AddressID,
-		City:       getAddressrById.City,
-		PostalCode: getAddressrById.PostalCode,
-		UserIDFK:   getAddressrById.UserIDFK,
+		City:       request.City,
+		PostalCode: request.PostalCode,
+		Province: request.Province,
+		UserIDFK:   request.UserIdFK,
 	}
 
 	updateAddress, errUpdate := service.repository.UpdateAddress(addressRequest)

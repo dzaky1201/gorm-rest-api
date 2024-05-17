@@ -32,7 +32,7 @@ func (repo *AddressRepositoryImpl) GetAddressById(Id int) (domain.Address, error
 	err := repo.db.First(&addressData, "address_id = ?", Id).Error
 
 	if err != nil {
-		return domain.Address{}, errors.New("user tidak ditemukan")
+		return domain.Address{}, errors.New("address tidak ditemukan")
 	}
 
 	return addressData, nil
