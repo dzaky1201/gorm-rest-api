@@ -45,7 +45,7 @@ func main() {
 	addressController := addresscontroller.NewAddressController(addressService)
 
 	r := echo.New()
-	r.Validator = &CustomValidator{validator: validator.New()}
+	r.Validator = CustomValidator{validator: validator.New()}
 	r.HTTPErrorHandler = helper.BindAndValidate
 	r.POST("/register", userController.SaveUser)
 	r.GET("/user/:id", userController.GetUser, JWTProtection())
