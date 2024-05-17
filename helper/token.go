@@ -10,7 +10,7 @@ type TokenUseCase interface {
 	GenerateAccessToken(claims JwtCustomClaims) (string, error)
 }
 
-type tokenUseCase struct{}
+type TokenUseCaseImpl struct{}
 
 type JwtCustomClaims struct {
 	ID    string `json:"user_id"`
@@ -19,11 +19,11 @@ type JwtCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func NewTokenUseCase() *tokenUseCase {
-	return &tokenUseCase{}
+func NewTokenUseCase() *TokenUseCaseImpl {
+	return &TokenUseCaseImpl{}
 }
 
-func (t *tokenUseCase) GenerateAccessToken(claims JwtCustomClaims) (string, error) {
+func (t *TokenUseCaseImpl) GenerateAccessToken(claims JwtCustomClaims) (string, error) {
 
 	plainToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
