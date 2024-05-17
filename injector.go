@@ -30,4 +30,6 @@ var addressSet = wire.NewSet(
 	wire.Bind(new(addresscontroller.AddressController), new(*addresscontroller.AddressControllerImpl)),
 )
 
-func RunServer() (e *echo.Echo)
+func RunServer() (e *echo.Echo) {
+	return
+}
